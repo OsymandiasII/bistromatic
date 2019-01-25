@@ -5,6 +5,8 @@
 #include <iostream> // ostream
 #include <memory>   // shared_ptr
 
+#include "bignum.hxx"
+
 namespace bistro
 {
 
@@ -22,22 +24,22 @@ namespace bistro
     {
     public:
         /// Type of a single digit.
-        using digit_t = /* FIXME */;
+        using digit_t = T;
 
         /// This class.
-        using self_t = /* FIXME */;
+        using self_t = BigNum;
 
         /// Shared pointer to this class.
-        using self_ptr_t = /* FIXME */;
+        using self_ptr_t = std::shared_ptr<BigNum>;
 
         /// Shared pointer to const self.
-        using const_self_ptr_t = /* FIXME */;
+        using const_self_ptr_t = const self_ptr_t;
 
         /// Type of the digit container.
-        using digits_t = /* FIXME */;
+        using digits_t = std::unordered_map<index_t, digit_t>;
 
         /// Type used as index.
-        using index_t = /* FIXME */;
+        using index_t = unsigned long long;
 
         /**
         ** Basic constructor, for empty number.
@@ -45,8 +47,8 @@ namespace bistro
         ** \a base is the numeric value of the base in which the number will be
         ** represented.
         **/
-        BigNum(std::size_t base);
-
+        BigNum(std::size_t base)
+        
         /**
         ** Construct the number from a file stream.
         **
@@ -84,7 +86,7 @@ namespace bistro
         ** number of digits in the BigNum.
         **/
         digit_t get_digit(index_t i) const;
-
+        
         /**
         ** Set the \a i th digit to the value \a d, 0 being the least
         ** significant digit.
@@ -181,6 +183,9 @@ namespace bistro
         explicit operator bool() const;
 
     private:
+        digits_t umap_;
+        std::size_t base_;
+        
     };
 
 }
