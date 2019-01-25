@@ -1,3 +1,4 @@
 *.out
 *.pdf
 *.tar
+libbistro-example.cc
