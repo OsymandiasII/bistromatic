@@ -153,6 +153,45 @@ namespace bistro
     }
 
     template <typename T>
+    typename BigNum<T>::self_t BigNum<T>::operator*(const self_t& other) const
+    {
+        digits_t result = digits_t();
+        digit_t carried = 0;
+        index_t l = set_.size();
+        auto digit = 0;
+        if (set_.size() < other.set_.size())
+            l = other.set_.size();
+        for (index_t a = 0; a < l; a++)
+        {
+            digit = other.set_[a] * set_[a] + carried;
+            if (digit / base_ > 0)
+            {
+                carried = digit / base_;
+                digit = digit % base_;
+            }
+            else
+                carried = 0;
+            result.emplace_back(0);
+            result[a] = digit;
+        }
+        if (carried != 0)
+        {
+            result.emplace_back(0);
+            result.push_back(digit);
+        }
+        auto res =  BigNum(base_);
+        if (!sign_ && !other.sign_)
+            res.set_positive(false);
+        index_t i = 0;
+        for (auto it = result.begin(); it < result.end(); it++)
+        {
+            res.set_digit(i, *it);
+            i++;
+        }
+        return res;
+    }
+
+    template <typename T>
     bool BigNum<T>::operator>(const self_t& other) const
     {
         if (this.get_num_digits() != other.get_num_digits())
