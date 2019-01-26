@@ -6,7 +6,7 @@ SRC= libbistro-example.cc #src/*.cc
 FLEX= flex
 FLXFLAGS= -f
 FLXOUT= src/scan-bistro.cc
-FLXIN= src/scan-bistro.ll;
+FLXIN= src/scan-bistro.ll
 
 BISON= bison
 BSNBIN= src/parse-bistro.yy
@@ -15,6 +15,14 @@ BSNDEFINE= --defines=src/parse-bistro.hh
 
 BSNGEN= location.hh parse-bistro.cc position.hh stack.hh src/location.hh src/position.hh src/stack.hh
 
+TFOLD= -Isrc/
+
+TESTSRC= tests/tests.cc
+TLIB= -lcriterion
+CXXFLAGSTST = --std=c++17
+TSRC= -Itests/
+TOUT= unit_test
+TVFLAG= --verbose -j1 --full-stats
 
 OUT= binary
 
@@ -29,12 +37,12 @@ flex:
 bison: 
 	${BISON} ${BSNBIN} -o ${BSNOUT} ${BSNDEFINE}
 
-#.PHONY: test
+.PHONY: test
 
 
-#test:
-
+test:
+	${CXX} ${CCXXFLAGSTST} ${TLIB} ${TSRC} ${TESTSRC} ${TFOLD} -o ${TOUT}
 
 clean:
-#	$(RM) 
+	$(RM) ${OUT} ${TOUT}
 	$(RM) $(BSNGEN)
