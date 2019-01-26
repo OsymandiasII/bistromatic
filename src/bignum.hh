@@ -4,6 +4,7 @@
 #include <fstream>  // ifstream
 #include <iostream> // ostream
 #include <memory>   // shared_ptr
+#include <vector>
 
 #include "bignum.hxx"
 
@@ -36,7 +37,7 @@ namespace bistro
         using const_self_ptr_t = const self_ptr_t;
 
         /// Type of the digit container.
-        using digits_t = std::unordered_map<index_t, digit_t>;
+        using digits_t = std::vector<digit_t>;
 
         /// Type used as index.
         using index_t = unsigned long long;
@@ -183,9 +184,9 @@ namespace bistro
         explicit operator bool() const;
 
     private:
-        digits_t umap_;
+        digits_t set_;
         std::size_t base_;
-        
+        bool sign_;
     };
 
 }
