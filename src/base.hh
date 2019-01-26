@@ -37,7 +37,7 @@ namespace bistro
         {
             for (auto it = list.begin(); it < list.end(); it++)
                 add_digit(*it);
-            throw "Not implemented";
+            //throw "Not implemented";
         }
 
         /// Get the numerical base represented.

@@ -138,7 +138,7 @@ namespace bistro
         if (carried != 0)
         {
             result.emplace_back(0);
-            result.push_back(digit);
+            result[result.size() - 1] = carried;
         }
         auto res =  BigNum(base_);
         if (!sign_ && !other.sign_)
@@ -177,7 +177,7 @@ namespace bistro
         if (carried != 0)
         {
             result.emplace_back(0);
-            result.push_back(digit);
+            result[result.size() - 1] = (carried);
         }
         auto res =  BigNum(base_);
         if (!sign_ && !other.sign_)
