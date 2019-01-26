@@ -27,7 +27,7 @@ namespace bistro
         /// Base.
         using base_t = Base;
         /// Pointer to AST node.
-        using node_t = /* FIXME */;
+        using node_t = std::shared_ptr<ASTNode<BigNum, Base>>;
         ASTFactory() = default;
 
         node_t operator()(const node_t& lhs, OpType op) const
