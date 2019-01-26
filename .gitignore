@@ -3,4 +3,4 @@
 *.tar
 libbistro-example.cc
 binary
-
+vgcore*
