@@ -35,12 +35,8 @@ namespace bistro
         /// Construct a base from an initializer list.
         Base(std::initializer_list<char_t> list)
         {
-            value_t n = 0;
             for (auto it = list.begin(); it < list.end(); it++)
-            {
-                list_.insert(std::pair<value_t, chat_t>(n,*it) );
-                n++;
-            }
+                add_digit(*it);
             throw "Not implemented";
         }
 
@@ -62,14 +58,24 @@ namespace bistro
         **/
         void add_digit(char_t repr)
         {
-            /* FIXME */
-            throw "Not implemented";
+            if (is_operator(repr) || is_digit(repr))
+                throw std::invalid_argument("Not a valid representation");
+            else
+            {
+                list_.insert(std::pair<value_t, char_t>(value_,repr));
+                value_++;
+            }
         }
 
         /// Check wether there is a match for the character representation \a c.
         bool is_digit(char_t c) const
         {
-            /* FIXME */
+            for (auto it = list_.begin(); it != list_.end(); it++)
+            {
+                if (c == it->second)
+                    return true;
+            }
+            return false;
             throw "Not implemented";
         }
 
@@ -79,7 +85,10 @@ namespace bistro
         **/
         static bool is_operator(char_t c)
         {
-            /* FIXME */
+            if (c == '+' || c == '-' || c == '*' || c == '/' || c == '%'
+                || c == '=')
+                return true;
+            return false;
             throw "Not implemented";
         }
 
@@ -90,8 +99,13 @@ namespace bistro
         **/
         char_t get_digit_representation(value_t i) const
         {
-            /* FIXME */
-            throw "Not implemented";
+            if (list_.find(i) == list_.end())
+                throw std::out_of_range("Out of range");
+            else
+            {
+                char_t iterator = list_.find(i)->first;
+                return iterator;
+            }
         }
 
         /**
@@ -101,12 +115,17 @@ namespace bistro
         **/
         value_t get_char_value(char_t r) const
         {
-            /* FIXME */
-            throw "Not implemented";
+            for (auto it = list_.begin(); it < list_.end(); it++)
+            {
+                if (r == it->second)
+                    return it->first;
+            }
+            throw std::out_of_range(r);
         }
 
     private:
         std::map<value_t, char_t> list_;
+        value_t value_ = 0;
     };
 
 }
