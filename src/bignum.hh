@@ -5,8 +5,7 @@
 #include <iostream> // ostream
 #include <memory>   // shared_ptr
 #include <vector>
-
-#include "bignum.hxx"
+#include <algorithm>
 
 namespace bistro
 {
@@ -48,7 +47,7 @@ namespace bistro
         ** \a base is the numeric value of the base in which the number will be
         ** represented.
         **/
-        BigNum(std::size_t base)
+        BigNum(std::size_t base);
         
         /**
         ** Construct the number from a file stream.
@@ -190,3 +189,5 @@ namespace bistro
     };
 
 }
+
+#include "bignum.hxx"
