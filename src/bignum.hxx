@@ -153,6 +153,38 @@ namespace bistro
     }
 
     template <typename T>
+    typename BigNum<T>::self_t& BigNum<T>::operator+=(const self_t& other)
+    {
+        //digits_t result = digits_t();
+        digit_t carried = 0;
+        index_t l = set_.size();
+        if (l < other.set_.size())
+        {
+            while (l < other.set_.size())
+                set_.emplace_back(0);
+        }
+        auto digit = 0;
+        for (index_t a = 0; a < l; a++)
+        {
+            set_[a] = other.set_[a] + set_[a] + carried;
+            if (digit / base_ > 0)
+            {
+                carried = digit / base_;
+                set_[a] = digit % base_;
+                
+            }
+            else
+                carried = 0;
+        }
+        if (carried != 0)
+        {
+            set_.emplace_back(0);
+            set_[set_.size() - 1] = carried;
+        }
+        return *this;
+    }
+
+    template <typename T>
     typename BigNum<T>::self_t BigNum<T>::operator*(const self_t& other) const
     {
         digits_t result = digits_t();
@@ -189,6 +221,38 @@ namespace bistro
             i++;
         }
         return res;
+    }
+
+    template <typename T>
+    typename BigNum<T>::self_t& BigNum<T>::operator*=(const self_t& other)
+    {
+        //digits_t result = digits_t();
+        digit_t carried = 0;
+        index_t l = set_.size();
+        if (l < other.set_.size())
+        {
+            while (l < other.set_.size())
+                set_.emplace_back(0);
+        }
+        auto digit = 0;
+        for (index_t a = 0; a < l; a++)
+        {
+            digit = other.set_[a] * set_[a] + carried;
+            if (digit / base_ > 0)
+            {
+                carried = digit / base_;
+                digit = digit % base_;
+                set_[a] = digit;
+            }
+            else
+                carried = 0;
+        }
+        if (carried != 0)
+        {
+            set_.emplace_back(0);
+            set_[set_.size() - 1] = carried;
+        }
+        return *this;
     }
 
     template <typename T>
