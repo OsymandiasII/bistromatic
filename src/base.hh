@@ -35,9 +35,11 @@ namespace bistro
         /// Construct a base from an initializer list.
         Base(std::initializer_list<char_t> list)
         {
+            value_t n = 0;
             for (auto it = list.begin(); it < list.end(); it++)
             {
-                list_.insert(*it)
+                list_.insert(std::pair<value_t, chat_t>(n,*it) );
+                n++;
             }
             throw "Not implemented";
         }
@@ -104,7 +106,7 @@ namespace bistro
         }
 
     private:
-        std::map<char_t> list_;
+        std::map<value_t, char_t> list_;
     };
 
 }
