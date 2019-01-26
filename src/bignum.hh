@@ -46,6 +46,7 @@ namespace bistro
         **
         ** \a base is the numeric value of the base in which the number will be
         ** represented.
+            
         **/
         BigNum(std::size_t base);
         

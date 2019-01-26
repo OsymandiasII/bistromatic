@@ -27,14 +27,13 @@ namespace bistro
             n++;
             while (in >> token)
             {
-                if (b.is_digit(token))
-                {
-                    set_digit(n, token);
-                    n++; 
-                }
+                if (!b.is_digit(token))
+                    break;
+                set_digit(n, token);
+                n++; 
             }
         }
-        std::reverse(set_.begin(),set_.end()); 
+        std::reverse(set_.begin(),set_.end());
     }
 
     template <typename T>
@@ -72,11 +71,22 @@ namespace bistro
             throw std::invalid_argument("Invalide argument");
         else
         {
-            while( i > set_.size())
+            while( i >= set_.size())
             {
                 set_.emplace_back(0);
             }
             set_[i] = d;
+            auto n = set_.size() - 1;
+            size_t x = 0;
+            while(set_[n] == 0 && n > 0)
+            {
+                x++;
+                n--; 
+            }
+            if (x > 0)
+                set_.resize(set_.size() - x);
+            if (set_.size() == 1 && set_[0] == 0)
+                set_.resize(0);
         }
     }
 
@@ -106,29 +116,40 @@ namespace bistro
     template <typename T>
     typename BigNum<T>::self_t BigNum<T>::operator+(const self_t& other) const
     {
-        digits_t num1 = set_;
-        digits_t num2 = other;
         digits_t result = digits_t();
         digit_t carried = 0;
-        if (num1.size() < num2.size())
+        index_t l = set_.size();
+        auto digit = 0;
+        if (set_.size() < other.set_.size())
+            l = other.set_.size();
+        for (index_t a = 0; a < l; a++)
         {
-            num1 = other;
-            num2 = set_;
-        }
-        for (auto it1 = num1.begin(); it1 < num1.end(); it1++)
-        {
-            for (auto it2 = num2.begin(); it2 < num2.end(); it2++)
+            digit = other.set_[a] + set_[a] + carried;
+            if (digit / base_ > 0)
             {
-                auto digit = it1 + it2 + carried;
-                if (digit / base_ > 0)
-                {
-                    carried = digit % base_;
-                    digit = digit / base_;
-                }
-                else
-                    carried = 0;
+                carried = digit / base_;
+                digit = digit % base_;
             }
+            else
+                carried = 0;
+            result.emplace_back(0);
+            result[a] = digit;
         }
+        if (carried != 0)
+        {
+            result.emplace_back(0);
+            result.push_back(digit);
+        }
+        auto res =  BigNum(base_);
+        if (!sign_ && !other.sign_)
+            res.set_positive(false);
+        index_t i = 0;
+        for (auto it = result.begin(); it < result.end(); it++)
+        {
+            res.set_digit(i, *it);
+            i++;
+        }
+        return res;
     }
 
     template <typename T>
