@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <initializer_list>
+#include <map>
 
 namespace bistro
 {
@@ -34,14 +35,17 @@ namespace bistro
         /// Construct a base from an initializer list.
         Base(std::initializer_list<char_t> list)
         {
-            /* FIXME */
+            for (auto it = list.begin(); it < list.end(); it++)
+            {
+                list_.insert(*it)
+            }
             throw "Not implemented";
         }
 
         /// Get the numerical base represented.
         size_t get_base_num() const
         {
-            /* FIXME */
+            return list_.size();
             throw "Not implemented";
         }
 
@@ -100,6 +104,7 @@ namespace bistro
         }
 
     private:
+        std::map<char_t> list_;
     };
 
 }
