@@ -4,6 +4,7 @@ namespace bistro
     template <typename T>
     BigNum::BigNum(std::size_t base)
         : base_(base)
+        , set_ = digits_t 
     {}
 
     template <typename T, typename Base>
@@ -57,24 +58,76 @@ namespace bistro
     template <typename T>
     void BigNum::set_digit(index_t i, digit_t d)
     {
-        
+        if (d >= base_)
+            throw std::invalid_argument(d);
+        else
+        {
+            base_[i] = d;
+            //strip or add 0
+        }
     }
 
     template <typename T>
     bool BigNum::is_positive() const
     {
-        
+        if (sign_)
+            return sign_;
+        return !sign_;
     }
 
     template <typename T>
     void BigNum::set_positive(bool p)
     {
-        
+        sign_ = p;
+    }
+
+
+    template <typename Base>
+    std::ostream& BigNum::print(std::ostream& out, const Base& b) const
+    {
+        for (auto rit = this.rbegin(); rit != this.rend(); ++rit)
+            out << b.get_digit_representation(*rit); 
     }
 
     template <typename Base>
-    std::ostream& print(std::ostream& out, const Base& b) const
+    bool BigNum::Boperator>(const self_t& other) const
     {
-        
+        if (this.get_num_digits() != other.get_num_digits())
+            return false;
+        if (this.sign_ != other.sign_)
+            return false;
+
+        auto rit = this.rbegin();
+        auto rother = other.rbegin();
+        for (; rit < this.rend() || rother < rother.rend; it++ ; rother++)
+        {
+            if (*rit > *rother)
+                return true;
+        }
+        return false;
+    }
+
+    template <typename Base>
+    bool BigNum::operator==(const self_t& other) const
+    {
+        if (this.get_num_digits() != other.get_num_digits())
+            return false;
+        if (this.sign_ != other.sign_)
+            return false;
+
+        auto rit = this.rbegin();
+        auto rother = other.rbegin();
+        for (; rit < this.rend() || rother < rother.rend; it++ ; rother++)
+        {
+            if (*rit != *rother)
+                return false;
+        }
+        return true;
+    }
+
+    template <typename Base>
+    explicit BigNum::operator bool() const
+    {
+        return this.size() != 0;
     }
 };
