@@ -1,20 +1,40 @@
 CXX=g++
-CXXFLAGS= -std=c++17 -pedantic -Wall -Wextra -Werror -g
+CXXFLAGS= -std=c++17 -pedantic -Wall -Wextra -Werror -g -Isrc -fmax-errors=5
 
-VPATH= src/
-SRC_FIND= *c
+SRC= libbistro-example.cc #src/*.cc
 
-OUT = binary
+FLEX= flex
+FLXFLAGS= -f
+FLXOUT= src/scan-bistro.cc
+FLXIN= src/scan-bistro.ll;
 
-all: ${CXX} ${CXXFLAGS} ${SRC_FIND} -o ${OUT}
+BISON= bison
+BSNBIN= src/parse-bistro.yy
+BSNOUT= src/parse-bistro.cc
+BSNDEFINE= --defines=src/parse-bistro.hh
+
+BSNGEN= location.hh parse-bistro.cc position.hh stack.hh src/location.hh src/position.hh src/stack.hh
+
+
+OUT= binary
+
+all: flex
+all: bison
+all:
+	${CXX} ${CXXFLAGS} ${SRC} -o ${OUT}
+
+flex: 
+	${FLEX} ${FLXFLAGS} -o ${FLXOUT} ${FLXIN}
+
+bison: 
+	${BISON} ${BSNBIN} -o ${BSNOUT} ${BSNDEFINE}
 
 #.PHONY: test
 
-#binary: ${CXX} ${CXXFLAGS} ${SRC_FIND} -o ${OUT}
 
 #test:
 
 
-#clean:
+clean:
 #	$(RM) 
-#	$(RM) $(OBJ_FIND)
+	$(RM) $(BSNGEN)
