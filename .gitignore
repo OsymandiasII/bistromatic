@@ -3,4 +3,5 @@
 *.tar
 libbistro-example.cc
 binary
+unit_test
 vgcore*
