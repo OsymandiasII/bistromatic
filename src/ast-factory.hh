@@ -32,20 +32,17 @@ namespace bistro
 
         node_t operator()(const node_t& lhs, OpType op) const
         {
-            /* FIXME */
-            throw "Not implemented";
+            return std::make_shared<UnOpNode<num_t, Base>>(lhs,op);
         }
 
         node_t operator()(const node_t& lhs, const node_t& rhs, OpType op) const
         {
-            /* FIXME */
-            throw "Not implemented";
+            return std::make_shared<BinOpNode<num_t, Base>>(lhs, rhs, op);
         }
 
         node_t operator()(const std::shared_ptr<num_t>& num) const
         {
-            /* FIXME */
-            throw "Not implemented";
+            return std::make_shared<NumberNode<num_t, Base>>(num);
         }
     };
 }
