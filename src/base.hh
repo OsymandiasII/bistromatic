@@ -44,7 +44,6 @@ namespace bistro
         size_t get_base_num() const
         {
             return list_.size();
-            throw "Not implemented";
         }
 
         /**
@@ -76,7 +75,6 @@ namespace bistro
                     return true;
             }
             return false;
-            throw "Not implemented";
         }
 
         /**
@@ -89,7 +87,6 @@ namespace bistro
                 || c == '=')
                 return true;
             return false;
-            throw "Not implemented";
         }
 
         /**
@@ -103,7 +100,7 @@ namespace bistro
                 throw std::out_of_range("Out of range");
             else
             {
-                char_t iterator = list_.find(i)->first;
+                char_t iterator = list_.find(i)->second;
                 return iterator;
             }
         }
@@ -115,12 +112,12 @@ namespace bistro
         **/
         value_t get_char_value(char_t r) const
         {
-            for (auto it = list_.begin(); it < list_.end(); it++)
+            for (auto it = list_.begin(); it != list_.end(); it++)
             {
                 if (r == it->second)
                     return it->first;
             }
-            throw std::out_of_range(r);
+            throw std::out_of_range("out of range");
         }
 
     private:
