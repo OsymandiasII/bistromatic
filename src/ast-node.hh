@@ -243,10 +243,8 @@ namespace bistro
         std::ostream&
         print_infix(std::ostream& out, const base_t& b) const override
         {
-            out << "(";
-            left_->print_infix(out, b);
             to_str(value_, out);
-            out  << ")";
+            left_->print_infix(out, b);
             return out;
         }
 
