@@ -1,7 +1,9 @@
 CXX=g++
-CXXFLAGS= -std=c++17 -pedantic -Wall -Wextra -Werror -g -Isrc -fmax-errors=5
+CXXFLAGS= -std=c++17 -pedantic -Wall -Wextra -Werror -g -Isrc -fmax-errors=10
 
-SRC= libbistro-example.cc #src/*.cc
+SRC= src/*.cc
+
+SRCEXPL = libbistro-example.cc
 
 FLEX= flex
 FLXFLAGS= -f
@@ -24,7 +26,7 @@ TSRC= -Itests/
 TOUT= unit_test
 TVFLAG= --verbose -j1 --full-stats
 
-OUT= binary
+OUT= bistro
 
 all: flex
 all: bison
@@ -36,6 +38,9 @@ flex:
 
 bison: 
 	${BISON} ${BSNBIN} -o ${BSNOUT} ${BSNDEFINE}
+
+exemple :
+	${CXX} ${CXXFLAGS} ${SRCEXPL} -o ${OUT}¬
 
 .PHONY: test
 
