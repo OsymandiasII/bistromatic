@@ -186,7 +186,8 @@ namespace bistro
             switch(value_) 
             {
                 case  OpType::PLUS : return std::make_shared<BigNum>(*l + *r);
-                default: return nullptr;
+                case  OpType::TIMES : return std::make_shared<BigNum>(*l * *r);
+                default: return l;
             }
         }
 
@@ -277,7 +278,7 @@ namespace bistro
             {
                 case  OpType::PLUS : return l;
                 case  OpType::MINUS : return l;
-                default: return nullptr;
+                default: return l;
             }
         }
 
