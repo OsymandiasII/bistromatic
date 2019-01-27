@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <map>
 
+
 namespace bistro
 {
     /**
@@ -30,7 +31,10 @@ namespace bistro
         using value_t = Value;
 
         /// Default constructor.
-        Base();
+        Base()
+        {
+            list_ = std::map<value_t, char_t>();
+        }
 
         /// Construct a base from an initializer list.
         Base(std::initializer_list<char_t> list)
