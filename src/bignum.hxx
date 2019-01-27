@@ -155,7 +155,6 @@ namespace bistro
     template <typename T>
     typename BigNum<T>::self_t& BigNum<T>::operator+=(const self_t& other)
     {
-        //digits_t result = digits_t();
         digit_t carried = 0;
         index_t l = set_.size();
         if (l < other.set_.size())
@@ -226,7 +225,6 @@ namespace bistro
     template <typename T>
     typename BigNum<T>::self_t& BigNum<T>::operator*=(const self_t& other)
     {
-        //digits_t result = digits_t();
         digit_t carried = 0;
         index_t l = set_.size();
         if (l < other.set_.size())
