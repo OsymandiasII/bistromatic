@@ -18,18 +18,20 @@ namespace bistro
     {
         char token;
         char tmp = in.get();
+        sign_ = true;
+        base_ = b.get_base_num();
         index_t n = 0;
         if (!b.is_digit(tmp))
-            throw std::length_error("Not a digit");           //maybe deref char
+            throw std::length_error("Not a digit");
         else
         {
-            set_digit(n, token);
+            set_digit(n, b.get_char_value(tmp));
             n++;
             while (in >> token)
             {
                 if (!b.is_digit(token))
                     break;
-                set_digit(n, token);
+                set_digit(n, b.get_char_value(token));
                 n++; 
             }
         }
@@ -56,7 +58,7 @@ namespace bistro
     typename BigNum<T>::digit_t BigNum<T>::get_digit(index_t i) const
     {
         index_t n = get_num_digits();
-        if (i > n)
+        if (i >= n)
             throw std::out_of_range("Index out of range");
         else
         {
@@ -108,7 +110,7 @@ namespace bistro
     template <typename Base>
     std::ostream& BigNum<T>::print(std::ostream& out, const Base& b) const
     {
-        for (auto rit = set_.rbegin(); rit != set_.rend(); ++rit)
+        for (auto rit = set_.rbegin(); rit != set_.rend(); rit++)
             out << b.get_digit_representation(*rit);
         return out; 
     }
@@ -124,7 +126,12 @@ namespace bistro
             l = other.set_.size();
         for (index_t a = 0; a < l; a++)
         {
-            digit = other.set_[a] + set_[a] + carried;
+            if (a >= set_.size())
+                digit = other.set_[a] + carried;
+            else if (a >= other.set_.size())
+                digit = set_[a] + carried;
+            else
+                digit = other.set_[a] + set_[a] + carried;
             if (digit / base_ > 0)
             {
                 carried = digit / base_;
@@ -156,13 +163,10 @@ namespace bistro
     typename BigNum<T>::self_t& BigNum<T>::operator+=(const self_t& other)
     {
         digit_t carried = 0;
-        index_t l = set_.size();
-        if (l < other.set_.size())
-        {
-            while (l < other.set_.size())
-                set_.emplace_back(0);
-        }
+        while (set_.size() < other.set_.size())
+            set_.emplace_back(0);
         auto digit = 0;
+        index_t l = set_.size();
         for (index_t a = 0; a < l; a++)
         {
             set_[a] = other.set_[a] + set_[a] + carried;
@@ -182,73 +186,129 @@ namespace bistro
         }
         return *this;
     }
-
+    
     template <typename T>
     typename BigNum<T>::self_t BigNum<T>::operator*(const self_t& other) const
     {
+        auto res =  BigNum(base_);
         digits_t result = digits_t();
         digit_t carried = 0;
-        index_t l = set_.size();
         auto digit = 0;
+        auto num1 = other.clone();
+        auto num2 = this->clone();
         if (set_.size() < other.set_.size())
-            l = other.set_.size();
-        for (index_t a = 0; a < l; a++)
         {
-            digit = other.set_[a] * set_[a] + carried;
-            if (digit / base_ > 0)
+            num1 = this->clone();
+            num2 =  other.clone();
+        }
+        index_t run  = 0;
+        for (auto it1 = num1.set_.begin() ; it1 != num1.set_.end(); it1++)
+        {
+            auto tmp_res =  BigNum(base_);
+            digits_t tmp = digits_t();
+            digit_t mul = *it1;
+            index_t a = 0;
+            for (auto it2 = num2.set_.begin() ; it2 != num2.set_.end(); it2++)
             {
-                carried = digit / base_;
-                digit = digit % base_;
+                digit_t mul2 = *it2;
+                for (index_t j = 0; j < run ; j++)
+                {
+                    tmp.emplace_back(0);
+                    a++;
+                }
+                digit = mul * mul2 + carried;
+                if (digit / base_ > 0)
+                {
+                    carried = digit / base_;
+                    digit = digit % base_;
+                }
+                else
+                    carried = 0;
+                tmp.emplace_back(0);
+                tmp[a] = digit;
+                a++;
             }
-            else
-                carried = 0;
-            result.emplace_back(0);
-            result[a] = digit;
-        }
-        if (carried != 0)
-        {
-            result.emplace_back(0);
-            result[result.size() - 1] = (carried);
-        }
-        auto res =  BigNum(base_);
-        if (!sign_ && !other.sign_)
-            res.set_positive(false);
-        index_t i = 0;
-        for (auto it = result.begin(); it < result.end(); it++)
-        {
-            res.set_digit(i, *it);
-            i++;
+            if (carried != 0)
+            {
+                tmp.emplace_back(0);
+                tmp[tmp.size() - 1] = (carried);
+            }
+            run++;
+            if (!sign_ && !other.sign_)
+                res.set_positive(false);
+            index_t i = 0;
+            for (auto it = result.begin(); it != result.end(); it++)
+            {
+                res.set_digit(i, *it);
+                i++;
+            }
+            i = 0;
+            for (auto it = tmp.begin(); it != tmp.end(); it++)
+            {
+                tmp_res.set_digit(i, *it);
+                i++;
+            }
+            res += tmp_res;
         }
         return res;
     }
 
+
     template <typename T>
     typename BigNum<T>::self_t& BigNum<T>::operator*=(const self_t& other)
     {
+        auto res =  BigNum(base_);
+        digits_t result = digits_t();
         digit_t carried = 0;
-        index_t l = set_.size();
-        if (l < other.set_.size())
-        {
-            while (l < other.set_.size())
-                set_.emplace_back(0);
-        }
         auto digit = 0;
-        for (index_t a = 0; a < l; a++)
+        auto num1 = this->clone();
+        auto num2 =  other.clone();
+        index_t run  = 0;
+        for (auto it1 = num1.set_.begin() ; it1 != num1.set_.end(); it1++)
         {
-            digit = other.set_[a] * set_[a] + carried;
-            if (digit / base_ > 0)
+            auto tmp_res =  BigNum(base_);
+            digits_t tmp = digits_t();
+            digit_t mul = *it1;
+            index_t a = 0;
+            for (auto it2 = num2.set_.begin() ; it2 != num2.set_.end(); it2++)
             {
-                carried = digit / base_;
-                digit = digit % base_;
-                set_[a] = digit;
+                digit_t mul2 = *it2;
+                for (index_t j = 0; j < run ; j++)
+                {
+                    tmp.emplace_back(0);
+                    a++;
+                }
+                digit = mul * mul2 + carried;
+                if (digit / base_ > 0)
+                {
+                    carried = digit / base_;
+                    digit = digit % base_;
+                }
+                else
+                    carried = 0;
+                tmp.emplace_back(0);
+                tmp[a] = digit;
+                a++;
             }
-            else
-                carried = 0;
-        }
-        if (carried != 0)
-        {
-            set_.emplace_back(0);
-            set_[set_.size() - 1] = carried;
+            if (carried != 0)
+            {
+                tmp.emplace_back(0);
+                tmp[tmp.size() - 1] = (carried);
+            }
+            run++;
+            index_t i = 0;
+            for (auto it = set_.begin(); it != set_.end(); it++)
+            {
+                this->set_digit(i, *it);
+                i++;
+            }
+            i = 0;
+            for (auto it = tmp.begin(); it != tmp.end(); it++)
+            {
+                tmp_res.set_digit(i, *it);
+                i++;
+            }
+            *this += tmp_res;
         }
         return *this;
     }
