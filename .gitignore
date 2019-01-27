@@ -2,6 +2,6 @@
 *.pdf
 *.tar
 libbistro-example.cc
-binary
+binary*
 unit_test
 vgcore*
