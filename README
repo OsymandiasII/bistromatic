@@ -1,0 +1,42 @@
+#LibBistro                                          ING1 - Project 
+
+RUSH C++
+
+
+#OBJECTIF
+    Le but de ce projet est de programer en C++ une calculatrice de nombre "infiniment" grand.
+    Pour cela nous devons implementer plusieurs constructeurs et classes ainsi que des surcharge
+    d'operateur. Tout cela etant necessaire aux calculs et au bon fonctionement de l'ast (construit 
+    par le parser)
+
+
+#FEATURES IMPLEMENTEES
+    Toutes les cores features sont implementee et marche correctement mais ne brillent pas par
+    leur rapiditee. J'ai preferer avoir une implementation fonctionelle, plutot que quelque chose
+    de rapide mais instable.
+
+#ADDITIONAL FEATURES
+    La notation polonaise fonctionne.
+    La notation polonaise inversee affiche quelaue chose, mais rarement un resultat correcte.
+    
+
+#TEST
+    Une quinzaine de tests peuvent etre lancee via la commande "make test" puis "./unit_test".
+    Ce sont des test ecrit en C++ avec criterion.
+    Ce sont des test de base qui verifient que les features de base, ex : le bignum se cree bien,
+    l'addition fonctione, les retenue finctionnent etc...
+
+#MAKEFILE
+    "make" build le project.
+    "make exemple" build le projet pour tester avec les exemples de libbistro-example.cc
+    "make test" build les tests
+    "make bison" et "make flex" build respectivement pour les fichier bison et flex
+    "make clean" supprime tout ce qui a ete cree.
+
+#KNOWN BUGS
+    Le programme bug lorsqu'on lui donne des parenthese.
+    Cependant le bug est geree avec un throw.
+
+
+#AUTHEUR
+    Timothe "Ozymandias" Malandain
